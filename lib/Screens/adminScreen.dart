@@ -1,5 +1,8 @@
+import 'package:crud1/Screens/footer/contactus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'product.dart';
+import 'dart:math';
 
 class Admin_Screen extends StatefulWidget {
   static String id = 'admin_screen';
@@ -70,7 +73,7 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                       ),
                       'New Product', () {
                     Navigator.pushNamed(context, Products.id);
-                  }),
+                  }, 90, 90, Colors.white24),
                   SizedBoss(10, 0),
                   butn(
                       Icon(
@@ -78,7 +81,10 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                         size: 40,
                       ),
                       'Remove',
-                      () {}),
+                      () {},
+                      90,
+                      90,
+                      Colors.white24),
                   SizedBoss(10, 0),
                   butn(
                       Icon(
@@ -86,37 +92,37 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                         size: 40,
                       ),
                       'Update',
-                      () {})
+                      () {},
+                      90,
+                      90,
+                      Colors.white24)
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 80.0),
-              child: Expanded(
-                  child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 40,
-                      width: 40,
-                      color: Colors.white24,
-                    ),
-                    SizedBoss(10, 10),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      color: Colors.white24,
-                    ),
-                    SizedBoss(10, 10),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      color: Colors.white24,
-                    ),
-                  ],
+            // Container(child: _buildList(8)),
+            ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(20.0),
+              scrollDirection: Axis.vertical,
+              controller: ScrollController(),
+              children: <Widget>[
+                Container(
+                  color: Colors.white38,
+                  height: 50,
+                  width: 50,
                 ),
-              )),
+                SizedBoss(20, 20),
+                Container(
+                  color: Colors.white38,
+                  height: 50,
+                  width: 50,
+                ),
+                SizedBoss(20, 20),
+
+                //content widgets
+              ],
             ),
+
             Expanded(
                 child: Align(
               alignment: Alignment.bottomCenter,
@@ -131,8 +137,9 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                     FootButton(() {}, Icon(Icons.help), 'Help', 60, 40, 10),
                     //  Container(width: 60, height: 40, color: Colors.white24),
                     SizedBoss(10, 0),
-                    FootButton(
-                        () {}, Icon(Icons.message), 'Contact Us', 60, 40, 10),
+                    FootButton(() {
+                      Navigator.pushNamed(context, ContactUs.id);
+                    }, Icon(Icons.message), 'Contact Us', 60, 40, 10),
                     SizedBoss(10, 0),
                     FootButton(() {}, Icon(Icons.pages), 'View', 60, 40, 10),
                     SizedBoss(10, 0),
@@ -141,7 +148,7 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                   ],
                 ),
               ),
-            ))
+            )),
           ],
         ),
       ),
@@ -182,17 +189,25 @@ class butn extends StatelessWidget {
   final String text;
   final Icon icon;
   final Function onpressed;
-  butn(this.icon, this.text, this.onpressed);
+  final double width, height;
+  final Color color;
+  butn(
+      [this.icon,
+      this.text,
+      this.onpressed,
+      this.height,
+      this.width,
+      this.color]);
 
   @override
   Widget build(BuildContext context) {
     return RawMaterialButton(
       shape: RoundedRectangleBorder(
           side: BorderSide.none, borderRadius: BorderRadius.circular(20)),
-      constraints: BoxConstraints.expand(width: 90, height: 90),
+      constraints: BoxConstraints.expand(width: width, height: height),
       //highlightElevation: 0.0,
       onPressed: onpressed,
-      fillColor: Colors.white24,
+      fillColor: color,
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -250,4 +265,17 @@ class SizedBoss extends StatelessWidget {
       child: kid,
     );
   }
+}
+
+List _buildList(int count) {
+  List<Widget> listItems = List();
+
+  for (int i = 0; i < count; i++) {
+    listItems.add(new Padding(
+        padding: new EdgeInsets.all(20.0),
+        child: new Text('Item ${i.toString()}',
+            style: new TextStyle(fontSize: 25.0, color: Colors.white38))));
+  }
+
+  return listItems;
 }

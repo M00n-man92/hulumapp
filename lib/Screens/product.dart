@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'adminScreen.dart';
 import 'package:crud1/constants/constant.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'dart:io';
+import 'dart:async';
 
 class Products extends StatefulWidget {
   static String id = 'products_screen';
@@ -12,6 +16,31 @@ class _ProductsState extends State<Products> {
   static String name;
   static String discription;
   static double price, quantity;
+  File _image;
+  final picker = ImagePicker();
+
+  Future getImagefromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future getImagefromCamera() async {
+    final picked_File = await picker.pickImage(source: ImageSource.camera);
+    setState(() {
+      if (picked_File != null || picked_File != null) {
+        _image = File(picked_File.path);
+      } else {
+        print('No Pics Taken.');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +116,76 @@ class _ProductsState extends State<Products> {
                 )
               ],
             ),
-          )
+          ),
+          SizedBoss(0, 10),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 12,
+              right: 5,
+            ),
+            child: Row(children: <Widget>[
+              RawMaterialButton(
+                onPressed: () => getImagefromGallery(),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                fillColor: Colors.white38,
+                constraints: BoxConstraints.expand(width: 50, height: 45),
+                child: Icon(Icons.attach_file),
+              ),
+
+              /* butn(Icon(Icons.ac_unit), 'Press me', () => getImage(), 50, 45,
+                    Colors.white38),
+         */
+              SizedBoss(0, 10),
+              Flexible(
+                  child: _image != null
+                      ? Image.file(
+                          _image,
+                          fit: BoxFit.scaleDown,
+                          width: 50,
+                          height: 45,
+                        )
+                      : Text(
+                          'no Image',
+                          style: TextStyle(color: Colors.white38),
+                        )),
+              SizedBoss(62, 5),
+              Flexible(
+                child: RawMaterialButton(
+                  onPressed: () => getImagefromCamera(),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  fillColor: Colors.white38,
+                  constraints: BoxConstraints.expand(width: 50, height: 45),
+                  child: Icon(Icons.camera_alt),
+                ),
+              ),
+              SizedBoss(0, 10),
+              Flexible(
+                  child: _image != null
+                      ? Image.file(
+                          _image,
+                          fit: BoxFit.scaleDown,
+                          width: 50,
+                          height: 45,
+                        )
+                      : Text(
+                          'no Image',
+                          style: TextStyle(color: Colors.white38),
+                        )),
+            ]),
+          ),
+          Expanded(
+              child: Align(
+            alignment: Alignment.bottomCenter,
+            child: RawMaterialButton(
+                onPressed: () => {},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                fillColor: Colors.white38,
+                constraints: BoxConstraints.expand(width: 50, height: 45),
+                child: Icon(Icons.add)),
+          ))
         ])));
   }
 }

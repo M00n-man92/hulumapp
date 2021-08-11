@@ -4,6 +4,7 @@ import 'Screens/adminScreen.dart';
 import 'Screens/loginScreen.dart';
 import 'Screens/registrationcreen.dart';
 import 'Screens/product.dart';
+import 'Screens/footer/contactus.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
         Admin_Screen.id: (contex) => Admin_Screen(),
-        Products.id: (contex) => Products()
+        Products.id: (contex) => Products(),
+        ContactUs.id: (context) => ContactUs()
       },
     );
   }
