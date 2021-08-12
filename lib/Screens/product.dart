@@ -61,7 +61,7 @@ class _ProductsState extends State<Products> {
                   child: Padding(
                       padding: EdgeInsets.all(10),
                       child:
-                          containerr(Colors.red, 40, 40, 'Create Product', 20)),
+                          Containerr(Colors.red, 40, 40, 'Create Product', 20)),
                 ),
                 SizedBoss(10, 0),
                 Padding(
@@ -203,7 +203,7 @@ class AddThings extends StatelessWidget {
         ),
         child: Row(
           children: <Widget>[
-            containerr(Colors.white38, 45, 50, name, 11),
+            Containerr(Colors.white38, 45, 50, name, 11),
             SizedBoss(10, 0),
             Flexible(
                 child: TextField(

@@ -1,8 +1,8 @@
 import 'package:crud1/Screens/footer/contactus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'product.dart';
-import 'dart:math';
 
 class Admin_Screen extends StatefulWidget {
   static String id = 'admin_screen';
@@ -11,6 +11,22 @@ class Admin_Screen extends StatefulWidget {
 }
 
 class _Admin_ScreenState extends State<Admin_Screen> {
+  final _auth = FirebaseAuth.instance;
+  User loggedinUser;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    final user = await _auth.currentUser;
+    if (user != null) {
+      loggedinUser = user;
+      print(loggedinUser.email);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,12 +39,12 @@ class _Admin_ScreenState extends State<Admin_Screen> {
               padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
               child: Row(
                 children: <Widget>[
-                  containerr(Colors.white24, 40, 40, 'Logo is here', 8),
+                  Containerr(Colors.white24, 40, 40, 'Logo is here', 8),
                   SizedBoss(10, 0),
                   Expanded(
                     child: Padding(
                         padding: EdgeInsets.all(10),
-                        child: containerr(Colors.red, 40, 40, 'Hulum APP', 20)),
+                        child: Containerr(Colors.red, 40, 40, 'Hulum APP', 20)),
                   ),
                   SizedBoss(10, 0),
                   Padding(
@@ -66,7 +82,7 @@ class _Admin_ScreenState extends State<Admin_Screen> {
               ),
               child: Row(
                 children: <Widget>[
-                  butn(
+                  Butn(
                       Icon(
                         Icons.add,
                         size: 40,
@@ -75,7 +91,7 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                     Navigator.pushNamed(context, Products.id);
                   }, 90, 90, Colors.white24),
                   SizedBoss(10, 0),
-                  butn(
+                  Butn(
                       Icon(
                         Icons.delete,
                         size: 40,
@@ -86,7 +102,7 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                       90,
                       Colors.white24),
                   SizedBoss(10, 0),
-                  butn(
+                  Butn(
                       Icon(
                         Icons.edit,
                         size: 40,
@@ -156,13 +172,13 @@ class _Admin_ScreenState extends State<Admin_Screen> {
   }
 }
 
-class containerr extends StatelessWidget {
+class Containerr extends StatelessWidget {
   final String textt;
   final Color colourr;
   final double heightt, widthh;
   final double fontsize;
 
-  containerr(
+  Containerr(
     this.colourr,
     this.heightt,
     this.widthh,
@@ -185,13 +201,13 @@ class containerr extends StatelessWidget {
   }
 }
 
-class butn extends StatelessWidget {
+class Butn extends StatelessWidget {
   final String text;
   final Icon icon;
   final Function onpressed;
   final double width, height;
   final Color color;
-  butn(
+  Butn(
       [this.icon,
       this.text,
       this.onpressed,
