@@ -3,7 +3,6 @@ import 'adminScreen.dart';
 import 'package:crud1/button.dart';
 import 'package:crud1/constants/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'regsitration_screen';
@@ -13,29 +12,10 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final _auth = FirebaseAuth.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   String passsword, email;
   bool _initialized = false;
   bool _error = false;
-
-  void initializeFlutterFire() async {
-    try {
-      await Firebase.initializeApp();
-      setState(() {
-        _initialized = true;
-      });
-    } catch (e) {
-      setState(() {
-        _error = true;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    initializeFlutterFire();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +58,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Colors.blueAccent,
               () async {
                 try {
-                  final newuser = await _auth.createUserWithEmailAndPassword(
-                      email: email, password: passsword);
+                  UserCredential newuser =
+                      await _auth.createUserWithEmailAndPassword(
+                          email: email, password: passsword);
                   if (newuser != null) {
                     Navigator.pushNamed(context, Admin_Screen.id);
                   }

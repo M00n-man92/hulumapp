@@ -25,6 +25,7 @@ class _ProductsState extends State<Products> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        print(_image);
       } else {
         print('No image selected.');
       }
@@ -36,6 +37,7 @@ class _ProductsState extends State<Products> {
     setState(() {
       if (picked_File != null || picked_File != null) {
         _image = File(picked_File.path);
+        print(_image);
       } else {
         print('No Pics Taken.');
       }
