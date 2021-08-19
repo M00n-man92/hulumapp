@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'adminScreen.dart';
 import 'package:crud1/constants/constant.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'dart:async';
 
@@ -13,11 +15,15 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
-  static String name;
+  static String name, trainee;
   static String discription;
-  static double price, quantity;
+  static String price;
+  static String quantity;
   File _image;
+  FirebaseFirestore _data = FirebaseFirestore.instance;
   final picker = ImagePicker();
+
+  Future<void> setdata() async {}
 
   Future getImagefromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -42,6 +48,20 @@ class _ProductsState extends State<Products> {
         print('No Pics Taken.');
       }
     });
+  }
+
+  Future<void> setImageStorage() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    String file = await basename(_image.path);
+    try {
+      Reference ref = FirebaseStorage.instance.ref().child('images/$file');
+      await ref.putFile(_image);
+      ref.getDownloadURL().then((value) {
+        print('doen$value');
+      });
+    } on FirebaseException catch (e) {
+      print('terer waws an exception$e');
+    }
   }
 
   @override
@@ -94,31 +114,21 @@ class _ProductsState extends State<Products> {
               color: Colors.white,
             ),
           ),
-          AddThings('Name', (value) {
-            value = name;
+          AddThings('Name', (value) async {
+            discription = await value;
           }),
           SizedBoss(0, 10),
-          AddThings('Discription', (value) {
-            value = discription;
+          AddThings('Discription', (value) async {
+            name = await value;
           }),
           SizedBoss(0, 10),
-          Flexible(
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  child: AddThings('Price', (value) {
-                    value = price;
-                  }),
-                ),
-                SizedBoss(5, 5),
-                Flexible(
-                  child: AddThings('Quantity', (value) {
-                    value = quantity;
-                  }),
-                )
-              ],
-            ),
-          ),
+          AddThings('Price', (value) async {
+            price = await value;
+          }),
+          SizedBoss(0, 10),
+          AddThings('quantity', (value) async {
+            quantity = await value;
+          }),
           SizedBoss(0, 10),
           Padding(
             padding: const EdgeInsets.only(
@@ -181,7 +191,20 @@ class _ProductsState extends State<Products> {
               child: Align(
             alignment: Alignment.bottomCenter,
             child: RawMaterialButton(
-                onPressed: () => {},
+                onPressed: () {
+                  _data
+                      .collection('future')
+                      .add({
+                        'name': discription,
+                        'discription': name,
+                        'price': price,
+                        'quantity': quantity
+                      })
+                      .then((value) => print('new ptof=duct added'))
+                      .catchError(
+                          (error) => print("Failed to merge data: $error"));
+                  setImageStorage();
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 fillColor: Colors.white38,

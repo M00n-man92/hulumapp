@@ -107,7 +107,7 @@ class _ContactUsState extends State<ContactUs>
                       child: Container(
                         height: 50,
                         width: 300,
-                        child: Text(document['text'],
+                        child: Text(' ' + document['text'],
                             style:
                                 TextStyle(color: Colors.white, fontSize: 14)),
                       ),
@@ -144,9 +144,6 @@ class _ContactUsState extends State<ContactUs>
                 onPressed: () async {
                   await sendmessage();
                   getmessagse();
-                  setState(() {
-                    sent_messages = null;
-                  });
                 },
                 fillColor: Colors.blueGrey,
                 constraints: BoxConstraints.tight(Size(70, 47)),
