@@ -19,6 +19,7 @@ class _ProductsState extends State<Products> {
   static String discription;
   static String price;
   static String quantity;
+  String downUrl;
   File _image;
   FirebaseFirestore _data = FirebaseFirestore.instance;
   final picker = ImagePicker();
@@ -55,10 +56,10 @@ class _ProductsState extends State<Products> {
     String file = await basename(_image.path);
     try {
       Reference ref = FirebaseStorage.instance.ref().child('images/$file');
-      await ref.putFile(_image);
-      ref.getDownloadURL().then((value) {
-        print('doen$value');
-      });
+      UploadTask upload = ref.putFile(_image);
+
+      downUrl = await (await upload).ref.getDownloadURL().toString();
+      print(downUrl);
     } on FirebaseException catch (e) {
       print('terer waws an exception$e');
     }
@@ -191,9 +192,9 @@ class _ProductsState extends State<Products> {
               child: Align(
             alignment: Alignment.bottomCenter,
             child: RawMaterialButton(
-                onPressed: () {
+                onPressed: () async {
                   _data
-                      .collection('future')
+                      .collection('fur')
                       .add({
                         'name': discription,
                         'discription': name,
@@ -203,7 +204,7 @@ class _ProductsState extends State<Products> {
                       .then((value) => print('new ptof=duct added'))
                       .catchError(
                           (error) => print("Failed to merge data: $error"));
-                  setImageStorage();
+                  await setImageStorage();
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),

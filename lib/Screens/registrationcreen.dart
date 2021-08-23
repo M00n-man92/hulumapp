@@ -12,10 +12,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
   String passsword, email;
-  bool _initialized = false;
-  bool _error = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +55,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Colors.blueAccent,
               () async {
                 try {
-                  UserCredential newuser =
-                      await _auth.createUserWithEmailAndPassword(
-                          email: email, password: passsword);
-                  if (newuser != null) {
-                    Navigator.pushNamed(context, Admin_Screen.id);
-                  }
-                } catch (e) {
-                  FocusScope.of(context).unfocus();
-                  print(e);
+                  FirebaseAuth _auth = FirebaseAuth.instance;
+
+                  await _auth.createUserWithEmailAndPassword(
+                      email: email, password: passsword);
+
+                  Navigator.pushNamed(context, Admin_Screen.id);
+                } on FirebaseException catch (e) {
+                  print("there was some issues on$e");
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Failed because $e"),
                   ));

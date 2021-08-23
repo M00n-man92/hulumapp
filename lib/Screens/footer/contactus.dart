@@ -17,7 +17,7 @@ class ContactUs extends StatefulWidget {
 class _ContactUsState extends State<ContactUs>
     with SingleTickerProviderStateMixin {
   FirebaseFirestore _firestor = FirebaseFirestore.instance;
-
+  static String now = DateTime.now().toString();
   static String chatter;
   static double width = 20;
   static String sent_messages;
@@ -26,9 +26,9 @@ class _ContactUsState extends State<ContactUs>
   FocusNode _focusNode = FocusNode();
   Future<void> sendmessage() async {
     await _firestor
-        .collection('message')
-        .add({'text': sent_messages})
-        .then((value) => print('sent message'))
+        .collection('mes')
+        .add({'text': sent_messages, 'date': now})
+        .then((value) => print('sent message  $now'))
         .catchError((error) => print('ther was an error somewherre'));
   }
 
@@ -95,7 +95,7 @@ class _ContactUsState extends State<ContactUs>
         ),
         body: SafeArea(
             child: StreamBuilder(
-                stream: _firestor.collection('message').snapshots(),
+                stream: _firestor.collection('mes').snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
@@ -103,15 +103,40 @@ class _ContactUsState extends State<ContactUs>
                   }
                   return ListView(
                       children: snapshot.data.docs.map((document) {
-                    return Center(
-                      child: Container(
-                        height: 50,
-                        width: 300,
-                        child: Text(' ' + document['text'],
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 14)),
-                      ),
-                    );
+                    return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          RawMaterialButton(
+                            onLongPress: () {},
+                            onPressed: () {},
+                            constraints:
+                                BoxConstraints(maxHeight: 50, maxWidth: 200),
+                            fillColor: Colors.amber,
+                            focusColor: Colors.amber.shade200,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Container(
+                                constraints: BoxConstraints(),
+                                child: Center(
+                                  child: Text(' ' + document['text'],
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 150,
+                            height: 50,
+                            child: Text(document['date'],
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12)),
+                          ),
+                        ]);
                   }).toList());
                 })),
         bottomSheet: SizedBoss(
@@ -156,84 +181,3 @@ class _ContactUsState extends State<ContactUs>
         ));
   }
 }
- /* SliverList(
-                        delegate:
-                            SliverChildListDelegate([SingleChildScrollView()])); */
-                       /* Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-              child: Row(
-                children: <Widget>[
-                  Containerr(Colors.white24, 40, 40, 'Logo is here', 8),
-                  SizedBoss(10, 0),
-                  Expanded(
-                    child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Containerr(Colors.red, 40, 40, 'Hulum APP', 20)),
-                  ),
-                  SizedBoss(10, 0),
-                  Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: CircleAvatar(
-                        radius: 29,
-                        backgroundColor: Colors.white24,
-                        child: Icon(
-                          Icons.person,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ))
-                ],
-              ),
-            ),
-            SizedBoss(
-                290,
-                10,
-                Divider(
-                  color: Colors.white38,
-                  height: 10,
-                )),
-            SizedBoss(
-              0,
-              30,
-              Container(
-                color: Colors.white,
-              ),
-            ),
-            
-          ]),  */ /* CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                pinned: false,
-                expandedHeight: 40,
-                toolbarHeight: 75,
-                title: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Containerr(Colors.red, 40, 500, 'Contact Us', 20)),
-                titleSpacing: 0,
-                actions: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: CircleAvatar(
-                        radius: 29,
-                        backgroundColor: Colors.white24,
-                        child: Icon(
-                          Icons.person,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ))
-                ],
-              ),
-              SliverToBoxAdapter(
-                child: SizedBoss(
-                    40,
-                    40,
-                    Containerr(
-                        Colors.yellowAccent, 40, 40, 'textts go here', 20)),
-              ),
-              
-
-              /**/
-            ],
-          ), */
