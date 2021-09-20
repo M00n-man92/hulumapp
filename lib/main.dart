@@ -6,11 +6,16 @@ import 'Screens/registrationcreen.dart';
 import 'Screens/product.dart';
 import 'Screens/footer/contactus.dart';
 
+import 'Screens/logout.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'Screens/update.dart';
+import 'Screens/product.dart';
+import 'Screens/delete.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MyApp());
 }
 
@@ -19,12 +24,40 @@ Widget SomethingWentWrong() {
 }
 
 class MyApp extends StatefulWidget {
+  Future<String> get jwtOrEmpty async {
+    final storage = FlutterSecureStorage();
+    var jwt = await storage.read(key: "jwt");
+    if (jwt == null) return "";
+    return jwt;
+  }
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final storage = FlutterSecureStorage();
+  final userIDStorage = FlutterSecureStorage();
+  Widget page = LoginScreen();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkLogin();
+  }
+
+  void checkLogin() async {
+    String token = await storage.read(key: "token");
+    String id = await storage.read(key: 'id');
+    print(token);
+    if (id = null) {
+      page = Admin_Screen();
+    } else {
+      page = RegistrationScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -38,9 +71,13 @@ class _MyAppState extends State<MyApp> {
           if (snapshot.connectionState == ConnectionState.done) {
             print('initialized');
             return MaterialApp(
-              home: WelcomeScreen(),
+              home: page,
               initialRoute: WelcomeScreen.id,
               routes: {
+                Delete.id: (context) => Delete(),
+                Update.id: (context) => Update(),
+                Logout.id: (context) => Logout(),
+                RegistrationScreen.id: (context) => RegistrationScreen(),
                 LoginScreen.id: (context) => LoginScreen(),
                 RegistrationScreen.id: (context) => RegistrationScreen(),
                 Admin_Screen.id: (contex) => Admin_Screen(),

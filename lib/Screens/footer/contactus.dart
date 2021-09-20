@@ -119,7 +119,7 @@ class _ContactUsState extends State<ContactUs>
                               child: Container(
                                 constraints: BoxConstraints(),
                                 child: Center(
-                                  child: Text(' ' + document['text'],
+                                  child: Text(document['text'],
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,

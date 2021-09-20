@@ -1,8 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'adminScreen.dart';
 import 'package:crud1/button.dart';
 import 'package:crud1/constants/constant.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crud1/Screens/registerdio.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'regsitration_screen';
@@ -12,7 +13,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  String passsword, email;
+  String passsword, email, name;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +30,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 48.0,
             ),
             TextField(
-              onChanged: (value) {
-                value = email;
+              onChanged: (value) async {
+                name = await value;
+              },
+              textAlign: TextAlign.center,
+              decoration: kdecorations.copyWith(hintText: 'Enter your name'),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            TextField(
+              onChanged: (value) async {
+                email = await value;
               },
               textAlign: TextAlign.center,
               decoration: kdecorations.copyWith(hintText: 'Enter your email'),
@@ -41,8 +52,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             TextField(
               obscureText: true,
               textAlign: TextAlign.center,
-              onChanged: (value) {
-                value = passsword;
+              onChanged: (value) async {
+                passsword = await value;
               },
               decoration:
                   kdecorations.copyWith(hintText: 'Enter your password'),
@@ -55,17 +66,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Colors.blueAccent,
               () async {
                 try {
-                  FirebaseAuth _auth = FirebaseAuth.instance;
-
-                  await _auth.createUserWithEmailAndPassword(
-                      email: email, password: passsword);
-
-                  Navigator.pushNamed(context, Admin_Screen.id);
-                } on FirebaseException catch (e) {
-                  print("there was some issues on$e");
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text("Failed because $e"),
-                  ));
+                  var res =
+                      await AuthService().sendPost(name, email, passsword);
+                  print(res.data);
+                } on DioError catch (e) {
+                  print(e);
                 }
               },
             ),

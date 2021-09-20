@@ -1,8 +1,13 @@
+import 'package:crud1/Screens/delete.dart';
 import 'package:crud1/Screens/footer/contactus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crud1/Screens/loginScreen.dart';
+import 'package:crud1/Screens/update.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'product.dart';
+import 'package:crud1/Screens/logout.dart';
+import 'package:crud1/Screens/delete.dart';
 
 class Admin_Screen extends StatefulWidget {
   static String id = 'admin_screen';
@@ -11,56 +16,47 @@ class Admin_Screen extends StatefulWidget {
 }
 
 class _Admin_ScreenState extends State<Admin_Screen> {
-  final _auth = FirebaseAuth.instance;
-  User loggedinUser;
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
-
-  void getCurrentUser() async {
-    final user = await _auth.currentUser;
-    if (user != null) {
-      loggedinUser = user;
-      print(loggedinUser.email);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black12,
+      backgroundColor: Colors.brown,
+      appBar: AppBar(
+        toolbarHeight: 70,
+        leading: Padding(
+            padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+            child: Row(children: <Widget>[SizedBoss(40, 40)])),
+        title: Padding(
+            padding: EdgeInsets.all(10),
+            child: Containerr(Colors.brown, 40, 500, 'Hulum Admin', 20)),
+        titleSpacing: 0,
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 5),
+              child: RawMaterialButton(
+                onLongPress: () {
+                  Navigator.pushNamed(context, Logout.id);
+
+                  //Navigator.pushNamed(context, LogoutScreen());
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                constraints: BoxConstraints.expand(height: 50, width: 50),
+                child: CircleAvatar(
+                  radius: 29,
+                  backgroundColor: Colors.white24,
+                  child: Icon(
+                    Icons.person,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              ))
+        ],
+      ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-              child: Row(
-                children: <Widget>[
-                  Containerr(Colors.white24, 40, 40, 'Logo is here', 8),
-                  SizedBoss(10, 0),
-                  Expanded(
-                    child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Containerr(Colors.red, 40, 40, 'Hulum APP', 20)),
-                  ),
-                  SizedBoss(10, 0),
-                  Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: CircleAvatar(
-                        radius: 29,
-                        backgroundColor: Colors.white24,
-                        child: Icon(
-                          Icons.person,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ))
-                ],
-              ),
-            ),
             SizedBoss(
                 290,
                 10,
@@ -93,25 +89,21 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                   SizedBoss(10, 0),
                   Butn(
                       Icon(
-                        Icons.delete,
-                        size: 40,
-                      ),
-                      'Remove',
-                      () {},
-                      90,
-                      90,
-                      Colors.white24),
-                  SizedBoss(10, 0),
-                  Butn(
-                      Icon(
                         Icons.edit,
                         size: 40,
                       ),
-                      'Update',
-                      () {},
-                      90,
-                      90,
-                      Colors.white24)
+                      'Update', () {
+                    Navigator.pushNamed(context, Update.id);
+                  }, 90, 90, Colors.white24),
+                  SizedBoss(10, 0),
+                  Butn(
+                      Icon(
+                        Icons.delete,
+                        size: 40,
+                      ),
+                      'Remove', () {
+                    Navigator.pushNamed(context, Delete.id);
+                  }, 90, 90, Colors.white24),
                 ],
               ),
             ),
@@ -150,17 +142,13 @@ class _Admin_ScreenState extends State<Admin_Screen> {
                 ),
                 child: Row(
                   children: <Widget>[
-                    FootButton(() {}, Icon(Icons.help), 'Help', 60, 40, 10),
                     //  Container(width: 60, height: 40, color: Colors.white24),
                     SizedBoss(10, 0),
                     FootButton(() {
                       Navigator.pushNamed(context, ContactUs.id);
                     }, Icon(Icons.message), 'Contact Us', 60, 40, 10),
                     SizedBoss(10, 0),
-                    FootButton(() {}, Icon(Icons.pages), 'View', 60, 40, 10),
                     SizedBoss(10, 0),
-                    FootButton(
-                        () {}, Icon(Icons.settings), 'Setting', 60, 40, 10),
                   ],
                 ),
               ),
@@ -172,30 +160,64 @@ class _Admin_ScreenState extends State<Admin_Screen> {
   }
 }
 
+showAlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget remindButton = TextButton(
+    child: Text("Remind me later"),
+    onPressed: () {},
+  );
+  Widget cancelButton = TextButton(
+    child: Text("Cancel"),
+    onPressed: () {},
+  );
+  Widget launchButton = TextButton(
+    child: Text("Launch missile"),
+    onPressed: () {},
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Notice"),
+    content: Text(
+        "Launching this missile will destroy the entire universe. Is this what you intended to do?"),
+    actions: [
+      remindButton,
+      cancelButton,
+      launchButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
 class Containerr extends StatelessWidget {
   final String textt;
+  final int price;
   final Color colourr;
   final double heightt, widthh;
   final double fontsize;
-
-  Containerr(
-    this.colourr,
-    this.heightt,
-    this.widthh,
-    this.textt,
-    this.fontsize,
-  );
+  final Color color;
+  Containerr(this.colourr, this.heightt, this.widthh, this.textt, this.fontsize,
+      [this.color, this.price]);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: heightt,
-      width: widthh,
-      color: colourr,
-      child: Padding(
-        padding: EdgeInsets.only(left: 10, top: 8, right: 10),
-        child: Text(textt,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: fontsize)),
+    return Center(
+      child: Container(
+        height: heightt,
+        width: widthh,
+        color: colourr,
+        child: Padding(
+          padding: EdgeInsets.only(left: 10, top: 8, right: 10),
+          child: Text(textt,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: color, fontSize: fontsize)),
+        ),
       ),
     );
   }
